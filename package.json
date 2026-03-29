@@ -31,7 +31,7 @@
   "dev": "nodemon",
   "scripts": {
     "start": "node dist/libraryServer.js",
-    "build": "prisma generate && tsc",
+    "build": "prisma generate && tsc && cp -r src/generated dist/",
     "dev": "tsx src/libraryServer.ts",
     "dev:watch": "nodemon",
     "seed": "tsx src/seed.ts"
