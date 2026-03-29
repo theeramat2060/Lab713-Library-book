@@ -184,17 +184,16 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
-        "fromEnvVar": "DATABASE_URL",
+        "fromEnvVar": "DIRECT_URL",
         "value": null
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel author {\n  id          Int    @id @default(autoincrement())\n  name        String\n  surname     String\n  affiliation String\n  books       book[]\n}\n\nmodel book {\n  id            Int            @id @default(autoincrement())\n  title         String\n  isbn          String         @unique\n  category      String\n  authorId      Int\n  author        author         @relation(fields: [authorId], references: [id])\n  borrowRecords borrowRecord[]\n}\n\nmodel member {\n  id            Int            @id @default(autoincrement())\n  memberId      String         @unique\n  name          String\n  surname       String\n  phone         String\n  borrowRecords borrowRecord[]\n}\n\nmodel borrowRecord {\n  id         Int       @id @default(autoincrement())\n  memberId   Int\n  bookId     Int\n  borrowDate DateTime\n  dueDate    DateTime\n  returnDate DateTime?\n  member     member    @relation(fields: [memberId], references: [id])\n  book       book      @relation(fields: [bookId], references: [id])\n}\n",
-  "inlineSchemaHash": "704e09e63e09d8a45e12f7601061cef5830f0ff84edd65df86f4fbd10996a94f",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DIRECT_URL\")\n}\n\nmodel author {\n  id          Int    @id @default(autoincrement())\n  name        String\n  surname     String\n  affiliation String\n  books       book[]\n}\n\nmodel book {\n  id            Int            @id @default(autoincrement())\n  title         String\n  isbn          String         @unique\n  category      String\n  authorId      Int\n  author        author         @relation(fields: [authorId], references: [id])\n  borrowRecords borrowRecord[]\n}\n\nmodel member {\n  id            Int            @id @default(autoincrement())\n  memberId      String         @unique\n  name          String\n  surname       String\n  phone         String\n  borrowRecords borrowRecord[]\n}\n\nmodel borrowRecord {\n  id         Int       @id @default(autoincrement())\n  memberId   Int\n  bookId     Int\n  borrowDate DateTime\n  dueDate    DateTime\n  returnDate DateTime?\n  member     member    @relation(fields: [memberId], references: [id])\n  book       book      @relation(fields: [bookId], references: [id])\n}\n",
+  "inlineSchemaHash": "a42a7cfdb8a6ac581848bb7911e862225ce22ffe6f0ac99d7ea67c4a0ea1828c",
   "copyEngine": true
 }
 

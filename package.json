@@ -28,6 +28,9 @@
     "dev:watch": "nodemon",
     "seed": "tsx src/seed.ts"
   },
+  "prisma": {
+    "seed": "tsx src/seed.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/theeramat2060/Lab713-Library-book.git"
