@@ -32,6 +32,7 @@ out/
 .vite/
 .vscode/
 .idea/
+# Note: src/generated/prisma is committed for deployment compatibility
 
 # OS specific files
 .DS_Store
