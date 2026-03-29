@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
+import libraryRouter from './routes/LibraryRouter.js';
 import * as libraryService from './services/LibraryService.js';
-import * as bookService from './services/BookService.js';
+
 const app = express();
 const port = 4000;
 
@@ -10,53 +11,10 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Library Management System API' });
 });
 
-// Book endpoints
-app.get('/books', async (req: Request, res: Response) => {
-  try {
-    if (req.query.title) {
-      const title = req.query.title as string;
-      const books = await bookService.getBookByTitle(title);
-      return res.json(books);
-    }
-    const books = await bookService.getAllBooks();
-    res.json(books);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch books' });
-  }
-});
+// Books routes with pagination and complex search (Homework 2)
+app.use('/books', libraryRouter);
 
-app.get('/books/:id', async (req: Request, res: Response) => {
-  try {
-    const id = parseInt(req.params.id);
-    const book = await bookService.getBookById(id);
-    if (book) {
-      res.json(book);
-    } else {
-      res.status(404).json({ error: 'Book not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch book' });
-  }
-});
-
-app.post('/books', async (req: Request, res: Response) => {
-  try {
-    const { title, isbn, category, authorId } = req.body;
-    if (!title || !isbn || !category || !authorId) {
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-    const book = await bookService.addBook({ title, isbn, category, authorId });
-    res.json({ message: 'Book added successfully', data: book });
-  } catch (error: any) {
-    if (error.code === 'P2002') {
-      res.status(400).json({ error: 'ISBN already exists' });
-    } else {
-      res.status(500).json({ error: 'Failed to add book' });
-    }
-  }
-});
-
-// Author endpoints
+// Authors endpoints
 app.get('/authors', async (req: Request, res: Response) => {
   try {
     const authors = await libraryService.getAllAuthors();
@@ -80,7 +38,7 @@ app.get('/authors/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Member endpoints
+// Members endpoints
 app.get('/members/search', async (req: Request, res: Response) => {
   try {
     if (req.query.name) {
