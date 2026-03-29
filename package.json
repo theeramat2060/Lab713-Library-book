@@ -10,17 +10,25 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1019.0",
+    "@aws-sdk/s3-request-presigner": "^3.1019.0",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^5.22.0",
+    "@prisma/client-runtime-utils": "^7.6.0",
+    "@types/cors": "^2.8.19",
+    "@types/multer": "^2.1.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "multer": "^2.1.1",
     "pg": "^8.20.0"
   },
   "name": "Library-service@1.0.0",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
+  "build": "prisma generate && tsc",
+  "dev": "nodemon",
   "scripts": {
     "start": "node dist/libraryServer.js",
     "build": "tsc",
