@@ -1,3 +1,4 @@
+
 import type { Book } from "../models/Book";
 import * as repo from "../repositories/BookRepositoryPrisma";
 
@@ -16,4 +17,3 @@ export function getBookById(id: number): Promise<Book | null> {
 export function addBook(newBook: Omit<Book, 'id'>): Promise<Book> {
     return repo.addBook(newBook);
 }
-
