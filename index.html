@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library System Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    .section:last-child {
+      border-bottom: none;
+    }
+    .section h2 {
+      color: #555;
+      font-size: 18px;
+      margin-top: 0;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+    input[type="text"],
+    input[type="file"],
+    button {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .response {
+      margin-top: 15px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-left: 4px solid #007bff;
+      border-radius: 4px;
+      display: none;
+    }
+    .response.show {
+      display: block;
+    }
+    .response.error {
+      border-left-color: #dc3545;
+      background-color: #ffe0e0;
+    }
+    .response.success {
+      border-left-color: #28a745;
+      background-color: #e0ffe0;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 0;
+    }
+    a {
+      color: #007bff;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏛️ Library Management System - Test Page</h1>
+
+    <!-- Test CORS & API Connection -->
+    <div class="section">
+      <h2>1. Test API Connection (CORS Test)</h2>
+      <p>Testing CORS connectivity from this page (port 5050) to API (port 4000)</p>
+      <button onclick="testApiConnection()">Test Connection</button>
+      <div id="corsResponse" class="response"></div>
+    </div>
+
+    <!-- Test Book Endpoints -->
+    <div class="section">
+      <h2>2. Fetch Books</h2>
+      <div class="form-group">
+        <label>Page Number (default: 1):</label>
+        <input type="text" id="pageNo" placeholder="1" />
+      </div>
+      <div class="form-group">
+        <label>Page Size (default: 10):</label>
+        <input type="text" id="pageSize" placeholder="10" />
+      </div>
+      <div class="form-group">
+        <label>Keyword (optional):</label>
+        <input type="text" id="keyword" placeholder="Search keyword..." />
+      </div>
+      <button onclick="fetchBooks()">Fetch Books</button>
+      <div id="booksResponse" class="response"></div>
+    </div>
+
+    <!-- Test File Upload -->
+    <div class="section">
+      <h2>3. Upload File to Cloud Storage</h2>
+      <div class="form-group">
+        <label>Select File:</label>
+        <input type="file" id="fileInput" accept="image/*" />
+      </div>
+      <button onclick="uploadFile()">Upload File</button>
+      <div id="uploadResponse" class="response"></div>
+    </div>
+
+    <!-- Test Presigned URL -->
+    <div class="section">
+      <h2>4. Get Presigned URL</h2>
+      <div class="form-group">
+        <label>File Key (from upload response):</label>
+        <input type="text" id="fileKey" placeholder="uploads/xxxxx.jpg" />
+      </div>
+      <button onclick="getPresignedUrl()">Get Presigned URL</button>
+      <div id="presignedResponse" class="response"></div>
+    </div>
+
+    <!-- Test All Authors -->
+    <div class="section">
+      <h2>5. Fetch All Authors</h2>
+      <button onclick="fetchAuthors()">Fetch Authors</button>
+      <div id="authorsResponse" class="response"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'http://localhost:4000';
+
+    function showResponse(elementId, data, isError = false) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+      element.classList.add('show');
+      element.classList.toggle('error', isError);
+      element.classList.toggle('success', !isError);
+    }
+
+    async function testApiConnection() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/`);
+        const data = await response.json();
+        showResponse('corsResponse', { status: 'SUCCESS', message: 'CORS enabled', data });
+      } catch (error) {
+        showResponse('corsResponse', { status: 'ERROR', message: error.message }, true);
+      }
+    }
+
+    async function fetchBooks() {
+      try {
+        const pageNo = document.getElementById('pageNo').value || '1';
+        const pageSize = document.getElementById('pageSize').value || '10';
+        const keyword = document.getElementById('keyword').value;
+
+        let url = `${API_BASE_URL}/books?pageNo=${pageNo}&pageSize=${pageSize}`;
+        if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+        showResponse('booksResponse', data);
+      } catch (error) {
+        showResponse('booksResponse', { error: error.message }, true);
+      }
+    }
+
+    async function uploadFile() {
+      try {
+        const fileInput = document.getElementById('fileInput');
+        if (!fileInput.files.length) {
+          showResponse('uploadResponse', { error: 'Please select a file' }, true);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        const response = await fetch(`${API_BASE_URL}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const fileKey = await response.text();
+        showResponse('uploadResponse', {
+          status: 'SUCCESS',
+          message: 'File uploaded',
+          fileKey,
+        });
+
+        document.getElementById('fileKey').value = fileKey;
+      } catch (error) {
+        showResponse('uploadResponse', { error: error.message }, true);
+      }
+    }
+
+    async function getPresignedUrl() {
+      try {
+        const fileKey = document.getElementById('fileKey').value;
+        if (!fileKey) {
+          showResponse('presignedResponse', { error: 'Please enter file key' }, true);
+          return;
+        }
+
+        const response = await fetch(
+          `${API_BASE_URL}/presignedUrl?key=${encodeURIComponent(fileKey)}`
+        );
+        const data = await response.json();
+        showResponse('presignedResponse', {
+          status: 'SUCCESS',
+          message: 'Presigned URL generated',
+          data,
+        });
+      } catch (error) {
+        showResponse('presignedResponse', { error: error.message }, true);
+      }
+    }
+
+    async function fetchAuthors() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/authors`);
+        const data = await response.json();
+        showResponse('authorsResponse', data);
+      } catch (error) {
+        showResponse('authorsResponse', { error: error.message }, true);
+      }
+    }
+  </script>
+</body>
+</html>

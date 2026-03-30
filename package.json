@@ -1,0 +1,53 @@
+{
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.3",
+    "@types/pg": "^8.20.0",
+    "nodemon": "^3.1.11",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1019.0",
+    "@aws-sdk/s3-request-presigner": "^3.1019.0",
+    "@prisma/adapter-pg": "^7.6.0",
+    "@prisma/client": "^5.22.0",
+    "@prisma/client-runtime-utils": "^7.6.0",
+    "@types/cors": "^2.8.19",
+    "@types/multer": "^2.1.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "pg": "^8.20.0"
+  },
+  "name": "Library-service@1.0.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "build": "prisma generate && tsc",
+  "dev": "nodemon",
+  "scripts": {
+    "start": "node dist/libraryServer.js",
+    "build": "prisma generate && tsc && cp -r src/generated dist/",
+    "dev": "tsx src/libraryServer.ts",
+    "dev:watch": "nodemon",
+    "seed": "tsx src/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx src/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theeramat2060/Lab713-Library-book.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theeramat2060/Lab713-Library-book/issues"
+  },
+  "homepage": "https://github.com/theeramat2060/Lab713-Library-book#readme"
+}
